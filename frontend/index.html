@@ -37,6 +37,24 @@
             document.getElementById("sid").innerText = data.sessionId;
         });
     </script>
+
+    <button id="turn">ターン送信</button>
+    <div id="turn-result"></div>
+    <script>
+        document.getElementById("turn").addEventListener("click", async () => {
+            try {
+                const res = await fetch("http://localhost:3000/api/turn", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ word: "入力サンプル" })
+                });
+                const data = await res.json();
+                document.getElementById("turn-result").innerText = data.word;
+            } catch (err) {
+                console.log(err);
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -13,7 +13,7 @@ const corsOptions = {
     optionsSuccessStatus: 204,
 }
 app.use(cors(corsOptions));
-app.options(["/api/(.*)"], cors(corsOptions));
+app.options("/^\/api\/.*$/", cors(corsOptions));
 
 // jsonボディを受け取る
 app.use(express.json());
@@ -25,6 +25,11 @@ app.get("/api/health", (req, res) => {
 app.post("/api/session", (req, res) => {
     const sessionId = uuidv4();
     res.json({ sessionId });
+});
+
+app.post("/api/turn", (req, res) => {
+    console.log("POST /api/turn body: ", req.body); // 送られてきたものを確認
+    res.json({ word: "りんご" });
 });
 
 app.listen(port, () => {
