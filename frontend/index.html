@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>しりとり</title>
 </head>
+
 <body>
     <h1>しりとり</h1>
     <button id="check">ヘルスチェック</button>
     <div id="result"></div>
-
     <script>
+        // okを受け取るだけ
         document.getElementById("check").addEventListener("click", async () => {
             try {
                 const res = await fetch("http://localhost:3000/api/health");
@@ -21,5 +23,20 @@
             }
         });
     </script>
+
+    <button id="new-session">セッション作成</button>
+    <div id="sid"></div>
+    <script>
+        document.getElementById("new-session").addEventListener("click", async () => {
+            const res = await fetch("http://localhost:3000/api/session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({}) // 今は空のまま
+            });
+            const data = await res.json();
+            document.getElementById("sid").innerText = data.sessionId;
+        });
+    </script>
 </body>
+
 </html>
