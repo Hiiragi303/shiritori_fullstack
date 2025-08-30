@@ -3,7 +3,7 @@ const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // CORS
 const corsOptions = {
@@ -28,8 +28,12 @@ app.post("/api/session", (req, res) => {
 });
 
 app.post("/api/turn", (req, res) => {
-    console.log("POST /api/turn body: ", req.body); // 送られてきたものを確認
-    res.json({ word: "りんご" });
+    const { sessionId, userWord } = req.body ?? {};
+    if (typeof sessionId !== "string" || typeof userWord !== "string") {
+        return res.status(400).json({ error: "Bad Request" });
+    }
+    console.log(`[TURN] ${sessionId}: ${userWord}`);
+    res.json({ reply: "りんご", valid: true });
 });
 
 app.listen(port, () => {
