@@ -18,15 +18,18 @@ app.options("/^\/api\/.*$/", cors(corsOptions));
 // jsonボディを受け取る
 app.use(express.json());
 
+// health
 app.get("/api/health", (req, res) => {
     res.send("ok");
 });
 
+// session発行
 app.post("/api/session", (req, res) => {
     const sessionId = uuidv4();
     res.json({ sessionId });
 });
 
+// ターン処理
 app.post("/api/turn", (req, res) => {
     const { sessionId, userWord } = req.body ?? {};
     if (typeof sessionId !== "string" || typeof userWord !== "string") {
