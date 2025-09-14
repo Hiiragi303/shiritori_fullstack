@@ -31,8 +31,17 @@
     <section>
         <h2>ターン</h2>
         <button id="send">送信</button>
-        <input id="word" placeholder="ことば" />
+        <input id="word" placeholder="ことば" /><span id="turn-caution" style="color: red;"></span>
         <pre id="out"></pre>
+    </section>
+
+    <section>
+        <h2>音声入力</h2>
+        <button id="start-speech">開始</button>
+        <button id="stop-speech" disabled>停止</button>
+        <div class="muted">状態: <span id="speech-status">idle</span></div>
+        <div>途中: <span id="speech-interim" class="muted"></span></div>
+        <div>確定: <span id="speech-final"></span></div>
     </section>
 </body>
 

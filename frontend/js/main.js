@@ -1,3 +1,5 @@
+import { SpeechInput } from './speech.js';
+
 const BASE = "http://localhost:3000";
 const $ = (id) => document.getElementById(id);
 let sessionId = null;
@@ -27,9 +29,17 @@ $("new-session").addEventListener("click", async () => {
     }
 });
 
-$("send").addEventListener("click", async () => {
-    if (!sessionId) return ($("out").textContent += "\n(先にセッションを作って)");
-    const userWord = $("word").value || "";
+let busy = false;
+async function sendTurn(userWord) {
+    if (!sessionId) {
+        $("turn-caution").textContent = "\n(先にセッションを作って)";
+        return;
+    }
+    $("turn-caution").textContent = '';
+    if (!userWord) return;
+    if (busy) return;
+    busy = true;
+    $("send").disabled = true;
     try {
         const res = await fetch(`${BASE}/api/turn`, {
             method: "POST",
@@ -40,6 +50,41 @@ $("send").addEventListener("click", async () => {
         $("out").textContent += `\n> ${userWord}\n< ${data.reply}`;
         $("word").value = "";
     } catch (e) {
-        $("out").textContent += `\n(送信エラー) ${e}`;
+        $("turn-caution").textContent += `\n(送信エラー) ${e}`;
+    } finally {
+        busy = false;
+        $("send").disabled = false;
     }
-})
+}
+
+$("send").addEventListener("click", async () => {
+    const userWord = $("word").value || "";
+    await sendTurn(userWord);
+});
+
+/**
+ * 音声認識部分
+ */
+let speech;
+try {
+    speech = new SpeechInput()
+        .onState((s) => {
+            $("speech-status").textContent = s;
+            $("start-speech").disabled = (s === 'listening');
+            $("stop-speech").disabled = (s !== 'listening');
+        })
+        .onInterim((t) => $("speech-interim").textContent = t)
+        .onFinal(async (t) => {
+            $("speech-final").textContent = t;
+            $("word").value = t;
+            $("speech-interim").textContent = '';
+            await sendTurn(t);
+        });
+} catch (e) {
+    console.log(e.message);
+    $("speech-status").textContent = 'unsupported';
+    $("start-speech").disabled = true;
+}
+
+$("start-speech")?.addEventListener("click", () => speech?.start());
+$("stop-speech")?.addEventListener("click", () => speech?.stop());
