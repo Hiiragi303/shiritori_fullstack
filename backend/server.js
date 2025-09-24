@@ -21,9 +21,6 @@ app.use(express.json());
 app.use("/api/session", require("./routes/session"));
 app.use("/api/turn", require("./routes/turn"));
 
-// health
-app.get("/api/health", (req, res) => res.send("ok"));
-
 initTokenizer().then(() => {
     app.listen(port, () => {
         console.log(`server start at http://localhost:${port}`);

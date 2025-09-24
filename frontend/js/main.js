@@ -4,15 +4,6 @@ const BASE = "http://localhost:3000";
 const $ = (id) => document.getElementById(id);
 let sessionId = null;
 
-$("check").addEventListener("click", async () => {
-    try {
-        const res = await fetch(`${BASE}/api/health`);
-        $("result").textContent = await res.text();  // "ok"
-    } catch (e) {
-        $("result").textContent = "エラー: " + e;
-    }
-});
-
 $("new-session").addEventListener("click", async () => {
     try {
         const res = await fetch(`${BASE}/api/session`, {
