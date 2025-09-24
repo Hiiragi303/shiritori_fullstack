@@ -32,3 +32,13 @@ e.resultsが配列になっていて、その中に音声認識の候補が詰�
     初期は何もしない
     - onResult
     外から関数を渡して_onResultを上書きするためのメソッド
+
+## 今日の気付きなど(9/24)
+### express.Router()って？
+小さなサブアプリを作る仕組み
+普通のappは全部appに積み上げるやり方
+express.Router()を使うと専用のルーターを作って最後にapp.use()で組み込める
+
+### module.exportsについて
+Node.jsのデフォルトはCommonJS方式でmodule.exportsを使う
+普通のJSはES Module方式だからexport/import

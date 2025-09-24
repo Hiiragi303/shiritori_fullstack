@@ -20,6 +20,12 @@ $("new-session").addEventListener("click", async () => {
     }
 });
 
+function addHistoryEntry(word, who) {
+    const li = document.createElement("li");
+    li.textContent = `${who}: ${word}`;
+    $("history").appendChild(li);
+}
+
 let busy = false;
 async function sendTurn(userWord) {
     if (!sessionId) {
@@ -38,7 +44,15 @@ async function sendTurn(userWord) {
             body: JSON.stringify({ sessionId, userWord })
         });
         const data = await res.json();
-        $("out").textContent += `\n> ${userWord}\n< ${data.reply}`;
+
+        addHistoryEntry(userWord, "You")
+        if (data.valid) {
+            addHistoryEntry(data.reply, "CPU");
+            $("message").textContent = '';
+        } else {
+            $("message").textContent = "ゲームオーバー!";
+        }
+        
         $("word").value = "";
     } catch (e) {
         $("turn-caution").textContent += `\n(送信エラー) ${e}`;
